@@ -1,0 +1,8 @@
+.disabledBtn {
+    background-color: #61728a;
+    border-color: #61728a;
+    border-radius: 0.375rem;
+    color: #fff;
+    padding: 0.375rem 0.75rem;
+    opacity: 0.5;
+}
