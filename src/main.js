@@ -1,7 +1,6 @@
 import Vue from "vue";
 import App from "./App.vue";
-
-import "./assets/main.css";
+import "bootstrap/dist/css/bootstrap.css";
 import "./assets/style.css";
 // Start Font-awesome
 
@@ -12,10 +11,18 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 // import specific icons
-import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import {
+  faShoppingCart,
+  faTextHeight,
+  faTrash,
+  faSync,
+} from "@fortawesome/free-solid-svg-icons";
+
+// import specific icons
+import { faUniregistry } from "@fortawesome/free-brands-svg-icons";
 
 // add icons to the library
-library.add(faShoppingCart);
+library.add(faShoppingCart, faTextHeight, faUniregistry, faTrash, faSync);
 
 // add font awesome icon component
 Vue.component("font-awesome-icon", FontAwesomeIcon);
@@ -27,3 +34,5 @@ Vue.config.productionTip = false;
 new Vue({
   render: (h) => h(App),
 }).$mount("#app");
+
+import "bootstrap/dist/js/bootstrap.js";
