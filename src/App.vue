@@ -22,7 +22,7 @@ export default {
     // }
     let webstore = this;
     fetch(
-      "https://cw2afterschoolapp-env.eba-4rnh2pp6.eu-west-2.elasticbeanstalk.com/lessons"
+      this.serverURL
     ).then(function (response) {
       response.json().then(function (json) {
         webstore.lessons = json;
@@ -57,7 +57,11 @@ export default {
         }
       })
       console.log("Service Workers Unregistered")
-    }
+    },
+    addItemToCart(aLesson) {
+      aLesson.availability--;
+      this.cart.push(aLesson.id);
+    },
   },
   computed: {
     cartItemCount() {
@@ -91,13 +95,10 @@ export default {
           </font-awesome-icon>
           <span>Checkout</span>
         </button>
-        <button class="btn btn-primary" @click="togglePage" v-else>
-          <font-awesome-icon icon="fa-solid fa-cart-shopping">
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-              {{ cartItemCount }}
-            </span>
-          </font-awesome-icon>
-          <span>&nbsp Checkout</span>
+        <button class="btn btn-primary" @click="toggle" v-else>
+          <font-awesome-icon icon="fa-solid fa-cart-shopping" />
+          <span>&nbsp Checkout &nbsp</span>
+          <span class="badge text-bg-danger">{{ cartItemCount }}</span>
         </button>
       </div>
     </header>
@@ -120,7 +121,8 @@ export default {
       </button>
     </div>
     <main>
-      <component :is="currentView" :lessons="lessons" :baseURL="imageBaseURL"></component>
+      <component :is="currentView" :lessons="lessons" :baseURL="imageBaseURL" @add-item-to-cart="addItemToCart">
+      </component>
     </main>
   </div>
 </template>

@@ -4,6 +4,14 @@ export default {
     props: ["lessons", "baseURL"],
     data() {
         return {}
+    },
+    methods: {
+        isAddToCartDisabled(aLesson) {
+            return aLesson.availability == 0;
+        },
+        addToCart(aLesson) {
+            this.$emit("add-item-to-cart", aLesson)
+        }
     }
 }
 </script>
@@ -18,12 +26,12 @@ export default {
                 <p class="card-text">Fees: &#163;{{ lesson.price }}</p>
                 <p class="card-text">Location: {{ lesson.location }}</p>
                 <p class="card-text">Available: {{ lesson.availability }}</p>
-                <!-- <button class="disabledBtn" disabled v-if="isAddToCartDisabled(lesson)">
+                <button class="disabledBtn" disabled v-if="isAddToCartDisabled(lesson)">
                     Add to Cart
                 </button>
                 <button class="btn btn-primary" v-on:click="addToCart(lesson)" v-else>
                     Add to Cart
-                </button> -->
+                </button>
             </div>
         </div>
     </div>
