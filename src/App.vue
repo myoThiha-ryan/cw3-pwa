@@ -10,10 +10,25 @@ export default {
       cart: [],
       testConsole: true,
       showTestConsole: true,
+      lessons: [],
+      imageBaseURL: "https://cw2afterschoolapp-env.eba-4rnh2pp6.eu-west-2.elasticbeanstalk.com/",
       serverURL: "https://cw2afterschoolapp-env.eba-4rnh2pp6.eu-west-2.elasticbeanstalk.com/lessons"
     }
   },
   components: { Lesson, Checkout },
+  created: function () {
+    // if ("serviceWorker" in navigator) {
+    //   navigator.serviceWorker.register("service-worker.js");
+    // }
+    let webstore = this;
+    fetch(
+      "https://cw2afterschoolapp-env.eba-4rnh2pp6.eu-west-2.elasticbeanstalk.com/lessons"
+    ).then(function (response) {
+      response.json().then(function (json) {
+        webstore.lessons = json;
+      });
+    });
+  },
   methods: {
     toggle() {
       if (this.currentView == Lesson) {
@@ -105,7 +120,7 @@ export default {
       </button>
     </div>
     <main>
-      <component :is="currentView"></component>
+      <component :is="currentView" :lessons="lessons" :baseURL="imageBaseURL"></component>
     </main>
   </div>
 </template>
