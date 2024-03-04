@@ -8,6 +8,13 @@ export default {
       sitename: "After School Lessons",
       currentView: Lesson,
       cart: [],
+      order: {
+        name: "",
+        phoneNumber: "",
+        orderedLessons: [],
+        lessonIds: [],
+        numberOfSpaces: {},
+      },
       testConsole: true,
       showTestConsole: true,
       lessons: [],
@@ -62,6 +69,22 @@ export default {
       aLesson.availability--;
       this.cart.push(aLesson.id);
     },
+    removeItemFromCart(aLesson) {
+      const lessonIdToRemove = this.cart.find((elem) => {
+        return elem === aLesson.id;
+      });
+      const lessonIndexToRemove = this.cart.indexOf(lessonIdToRemove);
+      this.cart.splice(lessonIndexToRemove, 1);
+      this.lessons.forEach((elem) => {
+        if (elem.id === lessonIdToRemove) {
+          elem.availability++;
+        }
+      });
+      if (this.cart.length === 0) {
+        console.log("There is no product to checkout")
+        this.currentView = Lesson;
+      }
+    },
   },
   computed: {
     cartItemCount() {
@@ -69,6 +92,33 @@ export default {
     },
     isCheckoutDisabled() {
       return this.cart.length == 0;
+    },
+    lessonsToCheckout() {
+      const lessonsToCheckout = [];
+      /* filtering lesson objects from lessons array that are to checkout*/
+      this.lessons.forEach((lesson) =>
+        this.cart.forEach((element) => {
+          if (lesson.id === element) {
+            lessonsToCheckout.push(lesson);
+          }
+        })
+      );
+      this.order.orderedLessons = lessonsToCheckout;
+      /* filtering lessons ids that are to checkout */
+      const lessonIdsToCheckout = lessonsToCheckout.filter(
+        (lesson, index) =>
+          lessonsToCheckout.findIndex((item) => item.id === lesson.id) ===
+          index
+      );
+      lessonIdsToCheckout.forEach((lesson) => {
+        this.order.lessonIds.push(lesson.id);
+      });
+      /* counting total number of specific lessons that are to checkout */
+      lessonsToCheckout.forEach((lesson) => {
+        this.order.numberOfSpaces[lesson.title] =
+          (this.order.numberOfSpaces[lesson.title] || 0) + 1;
+      });
+      return lessonsToCheckout;
     },
   }
 }
@@ -121,7 +171,8 @@ export default {
       </button>
     </div>
     <main>
-      <component :is="currentView" :lessons="lessons" :baseURL="imageBaseURL" @add-item-to-cart="addItemToCart">
+      <component :is="currentView" :lessons="lessons" :baseURL="imageBaseURL" :lessonsToCheckout="lessonsToCheckout"
+        @add-item-to-cart="addItemToCart" @remove-item-from-cart="removeItemFromCart">
       </component>
     </main>
   </div>
